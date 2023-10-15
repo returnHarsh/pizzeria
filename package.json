@@ -6,7 +6,8 @@
     "serve": "nodemon server.js",
     "dev": "nodemon server.js",
     "development": "mix",
-    "watch": "npx mix watch"
+    "watch": "npx mix watch",
+    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "license": "MIT",
   "dependencies": {
@@ -19,10 +20,12 @@
     "express-ejs-layouts": "^2.5.1",
     "express-flash": "^0.0.2",
     "express-session": "^1.17.3",
+    "moment": "^2.29.4",
     "mongoose": "^7.5.4",
     "noty": "^3.2.0-beta-deprecated",
     "passport": "^0.6.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "laravel-mix": "^6.0.49",

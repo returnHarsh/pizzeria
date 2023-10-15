@@ -8,7 +8,6 @@ function cartController(){
         },
 
         update : function(req ,res){
-
         //   let cart = {
         //     items:{
         //         pizzaId: {item:pizzaObject , qty:0},
@@ -44,6 +43,8 @@ function cartController(){
         return res.json({totalQty : req.session.cart.totalQty});
         }
     }
+
+   
 
 }
 

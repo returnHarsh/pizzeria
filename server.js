@@ -10,6 +10,7 @@ const session = require("express-session");
 const flash = require("express-flash");
 const MongoDBstore  = require("connect-mongo");
 const passport = require("passport");
+const Emitter = require("events");
 
 
 const PORT = process.env.PORT;
@@ -40,7 +41,10 @@ DBconnection();
 
 
 
-
+//  event emitter
+const eventEmitter = new Emitter();
+app.set('eventEmitter' , eventEmitter);
+const backUpEmitter = new Emitter();
 
 
 //  setting sessions
@@ -56,6 +60,7 @@ app.use(session({
 
 //  passport configuration
 const passportInit = require("./app/config/passport");
+const { Server } = require("http");
 passportInit(passport);
 app.use(passport.initialize());
 app.use(passport.session());
@@ -64,7 +69,7 @@ app.use(passport.session());
 //  global middleware
 app.use((req , res , next)=>{
     res.locals.session = req.session;
-    res.locals.user = req.user;
+    res.locals.user= req.user;
     next();
 })
 
@@ -78,12 +83,51 @@ app.set('view engine' , 'ejs');
 //  all links routing here
 initRoutes(app);
 
+app.use((req , res)=>{
+    res.status(404).render('/error/404')
+})
 
 
 
 
 
 
-app.listen(PORT , ()=>{
+const server = app.listen(PORT , ()=>{
     console.log("server online");
 })
+
+
+
+//  socket connection
+const io = require('socket.io')(server);
+
+io.on('connection' , (socket)=>{
+    socket.on("join" , (roomName)=>{
+        socket.join(roomName);
+    })
+
+    
+})
+
+eventEmitter.on("orderUpdated" , (data)=>{
+    io.to(`order_${data.id}`).emit("orderUpdated" , data);
+ })
+
+ eventEmitter.on('orderPlaced', (data) => {
+    io.to('adminRoom').emit('orderPlaced', data)
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
