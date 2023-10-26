@@ -84,7 +84,7 @@ app.set('view engine' , 'ejs');
 initRoutes(app);
 
 app.use((req , res)=>{
-    res.status(404).render('/error/404')
+    res.status(404).render('error/404')
 })
 
 

@@ -60,9 +60,15 @@ function orderController(){
 
         show : async function(req , res){
          const order = await Order.findById(req.params.id);
-         res.render('customers/singleOrder' , {order : order});
-        }
 
+         let reqUser = JSON.stringify(req.user[0]._id)
+         let orderCustomer = JSON.stringify(order.customerId);
+
+         if(reqUser == orderCustomer){
+            return res.render('customers/singleOrder', { order })
+        }
+        return  res.redirect('/')
+        }
     }
 }
 
